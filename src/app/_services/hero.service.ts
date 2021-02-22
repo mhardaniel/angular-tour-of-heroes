@@ -11,7 +11,7 @@ import { HEROES } from '@mocks/mock-heroes';
   providedIn: 'root',
 })
 export class HeroService {
-  private heroesUrl = 'api/heroes'; // URL to web api
+  private heroesUrl = 'http://localhost:3000/heroes'; // URL to web api
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -57,10 +57,12 @@ export class HeroService {
 
   /** PUT: update the hero on the server */
   updateHero(hero: Hero): Observable<any> {
-    return this.http.put(this.heroesUrl, hero, this.httpOptions).pipe(
-      tap((_) => this.log(`updated hero id=${hero.id}`)),
-      catchError(this.handleError<any>('updateHero'))
-    );
+    return this.http
+      .put(this.heroesUrl + `/${hero.id}`, hero, this.httpOptions)
+      .pipe(
+        tap((_) => this.log(`updated hero id=${hero.id}`)),
+        catchError(this.handleError<any>('updateHero'))
+      );
   }
 
   /** POST: add a new hero to the server */
@@ -89,8 +91,8 @@ export class HeroService {
       return of([]);
     }
     return this.http.get<Hero[]>(`${this.heroesUrl}/?name=${term}`).pipe(
-      tap((x) =>
-        x.length
+      tap((x: any) =>
+        x.data.length
           ? this.log(`found heroes matching "${term}"`)
           : this.log(`no heroes matching "${term}"`)
       ),

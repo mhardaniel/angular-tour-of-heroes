@@ -3,8 +3,15 @@ import { heroes } from "../mocks/hero-mock.js";
 
 let HEROES = heroes;
 
-export const getHeroes = (req, res) => {
-  res.json({ success: true, data: HEROES });
+export const getHeroes = async (req, res) => {
+  let name = req.query.name;
+  let data = HEROES;
+
+  if (name) {
+    data = await data.filter((h) => h.name.includes(name));
+  }
+
+  res.json({ success: true, data: data });
 };
 
 export const getHero = async (req, res) => {
@@ -31,7 +38,7 @@ export const updateHero = async (req, res) => {
     res.json({
       success: true,
       message: "Hero updated",
-      data: { hero: hero },
+      data: hero,
     });
   } else {
     res.status(404).json({ success: false, message: "Hero not found" });
@@ -60,7 +67,7 @@ export const storeHero = async (req, res) => {
   res.json({
     success: true,
     message: "Hero created",
-    data: { hero: newHero },
+    data: newHero,
   });
   // res.status(404).json({ success: false, message: "Hero not found" });
 };

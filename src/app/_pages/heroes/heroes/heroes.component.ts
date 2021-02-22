@@ -18,7 +18,9 @@ export class HeroesComponent implements OnInit {
   }
 
   getHeroes(): void {
-    this.heroService.getHeroes().subscribe((heroes) => (this.heroes = heroes));
+    this.heroService
+      .getHeroes()
+      .subscribe((resp: any) => (this.heroes = resp.data));
   }
 
   add(name: string): void {
@@ -26,8 +28,8 @@ export class HeroesComponent implements OnInit {
     if (!name) {
       return;
     }
-    this.heroService.addHero({ name } as Hero).subscribe((hero) => {
-      this.heroes.push(hero);
+    this.heroService.addHero({ name } as Hero).subscribe((resp: any) => {
+      this.heroes.push(resp.data);
     });
   }
 
